@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Binarify</string>
+    <string name="copy">Kopieren</string>
+    <string name="input_placeholder">Eingabe</string>
+</resources>
