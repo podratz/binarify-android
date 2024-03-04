@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Binarify</string>
     <string name="copy">Copy</string>
+    <string name="copy_confirmation">Copied!</string>
     <string name="input_placeholder">Input</string>
 </resources>
