@@ -1,11 +1,14 @@
 package de.podratz.software.binarify.android
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
@@ -52,6 +55,11 @@ class MainActivity : AppCompatActivity() {
                 confirmationToast.show()
             }
         }
+
+        view.setOnClickListener {
+            hideKeyboard()
+            inputEditText.clearFocus()
+        }
     }
 
     private fun isBinary(text: String) : Boolean {
@@ -92,5 +100,10 @@ class MainActivity : AppCompatActivity() {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText(null, text)
         clipboardManager.setPrimaryClip(clipData)
+    }
+
+    private fun hideKeyboard(): Boolean {
+        return (getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow((currentFocus ?: View(this)).windowToken, 0)
     }
 }
