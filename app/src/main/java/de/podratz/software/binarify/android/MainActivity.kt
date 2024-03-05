@@ -3,7 +3,9 @@ package de.podratz.software.binarify.android
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
@@ -43,6 +45,11 @@ class MainActivity : AppCompatActivity() {
             val confirmation = resources.getString(R.string.copy_confirmation)
             val confirmationToast = Toast.makeText(this, confirmation, Toast.LENGTH_SHORT)
             confirmationToast.show()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                view.isHapticFeedbackEnabled = true
+                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            }
         }
     }
 
