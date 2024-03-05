@@ -1,7 +1,5 @@
 package de.podratz.software.binarify.android
 
-import android.R.attr
-import android.R.attr.label
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -10,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import de.podratz.software.binarify.android.databinding.ActivityMainBinding
+import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +28,11 @@ class MainActivity : AppCompatActivity() {
 
         inputEditText.doOnTextChanged { charSequence, _, _, _ ->
             val input = charSequence.toString()
-            outputTextView.text = toBinary(input)
+            val isInputBinary = isBinary(input)
+            outputTextView.text = when (isInputBinary) {
+                false -> toBinary(input)
+                true -> toUtf8(input)
+            }
         }
 
         copyButton.setOnClickListener {
@@ -42,6 +45,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun isBinary(text: String) : Boolean {
+        val isMultipleOfLength8 = text.length % 8 == 0
+        val hasOnlyBoolChars = text.all { it in setOf<Char>('0', '1') }
+        return isMultipleOfLength8 && hasOnlyBoolChars
+    }
+
     private fun toBinary(text: String): String {
         fun toPaddedBitString(byte: Byte): String {
             return byte
@@ -51,6 +60,23 @@ class MainActivity : AppCompatActivity() {
         val bytes = text.toByteArray(Charsets.UTF_8)
         val bitStrings = bytes.map(::toPaddedBitString)
         return bitStrings.reduce(String::plus)
+    }
+
+    private fun toUtf8(text: String) : String {
+        var input = text
+        var output = ""
+        while (input.isNotEmpty()) {
+            val nextByte = input
+                .take(8)
+                .map { it.digitToInt(2) }
+            var charValue = 0
+            for ((index, bit) in nextByte.withIndex()) {
+                charValue += bit * (2.0).pow(7 - index).toInt()
+            }
+            input = input.removeRange(0, 8)
+            output += charValue.toChar()
+        }
+        return output
     }
 
     private fun copyToClipboard(text: String) {
