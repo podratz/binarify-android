@@ -42,13 +42,14 @@ class MainActivity : AppCompatActivity() {
             val outputText = outputTextView.text.toString()
             copyToClipboard(outputText)
 
-            val confirmation = resources.getString(R.string.copy_confirmation)
-            val confirmationToast = Toast.makeText(this, confirmation, Toast.LENGTH_SHORT)
-            confirmationToast.show()
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val canDeviceVibrate = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            if (canDeviceVibrate) {
                 view.isHapticFeedbackEnabled = true
                 view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            } else {
+                val confirmation = resources.getString(R.string.copy_confirmation)
+                val confirmationToast = Toast.makeText(this, confirmation, Toast.LENGTH_SHORT)
+                confirmationToast.show()
             }
         }
     }
