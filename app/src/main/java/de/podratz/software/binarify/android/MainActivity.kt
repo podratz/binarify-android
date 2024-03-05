@@ -42,11 +42,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun toBinary(text: String) : String {
-        if (text.isEmpty()) return ""
-        val byteArray = text.toByteArray(Charsets.UTF_8)
-        val bitArray = byteArray.map { it.toString(2) }
-        return bitArray.reduce { acc, char -> acc + char }
+    private fun toBinary(text: String): String {
+        fun toPaddedBitString(byte: Byte): String {
+            return byte
+                .toString(2)
+                .padStart(8, '0')
+        }
+        val bytes = text.toByteArray(Charsets.UTF_8)
+        val bitStrings = bytes.map(::toPaddedBitString)
+        return bitStrings.reduce(String::plus)
     }
 
     private fun copyToClipboard(text: String) {
