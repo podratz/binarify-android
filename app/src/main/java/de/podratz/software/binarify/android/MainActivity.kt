@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                 false -> toBinary(input)
                 true -> toUtf8(input)
             }
+            copyButton.isEnabled = input.isNotEmpty()
         }
 
         copyButton.setOnClickListener {
